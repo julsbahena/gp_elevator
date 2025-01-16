@@ -1,7 +1,14 @@
-﻿// See https://aka.ms/new-console-template for more information
+﻿using ElevatorApp;
 
-using ElevatorApp;
 
-Elevator e = new Elevator();
-
-Console.WriteLine("Hello, World!");
+try
+{
+    Elevator mainElevator = new Elevator(1);
+    mainElevator.getStatus();
+    mainElevator.Move(2);
+    mainElevator.Move(5);
+    mainElevator.Move(0);
+}
+catch (Exception ex) { 
+    Console.WriteLine("Error -> " + ex.Message);
+}
