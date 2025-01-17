@@ -3,12 +3,18 @@
 
 try
 {
-    Elevator mainElevator = new Elevator(1);
+    //maybe random position
+    Elevator mainElevator = new Elevator(5);
     mainElevator.getStatus();
-    mainElevator.Move(2);
-    mainElevator.Move(5);
-    mainElevator.Move(0);
+    Outside outRequest = new Outside();
+    Inside insideRequest = new Inside();
+    outRequest.PickMeUp(2,mainElevator);
+    insideRequest.GoToFloor(1, mainElevator);
+    insideRequest.GoToFloor(4, mainElevator);
+    outRequest.PickMeUp(5,mainElevator);
+    insideRequest.GoToFloor(1, mainElevator);
 }
-catch (Exception ex) { 
+catch (Exception ex)
+{
     Console.WriteLine("Error -> " + ex.Message);
 }
