@@ -9,24 +9,16 @@ namespace TestProjectNUnit
         {
         }
 
-        [Test]
-        public void WetherFloorIsCorrect()
-        {
-            int initialFloor = 1;
-            Elevator e = new Elevator(initialFloor);
-            int current = e.Floor;
-            //Assert.AreSame(initialFloor,current);
-            Assert.That(current, Is.EqualTo(initialFloor));
-        }
+       
 
         [Test]
         public void WetherMoveIsCorrect()
         {
-            Elevator e = new Elevator(1);
+            Elevator e = new Elevator();
             for (int i = 1; i <= 5; i++)
             {
-                int requestFloor = getRandom(5);
-                e.Move(requestFloor);
+                int requestFloor = Helper.getRandom(5);
+                e.DetermineDirection(requestFloor);
                 Assert.That(e.Floor, Is.EqualTo(requestFloor));
 
             }
@@ -35,34 +27,30 @@ namespace TestProjectNUnit
         [Test]
         public void WetherHandleInvalidFloor()
         {
-            Elevator e = new Elevator(1);
+            Elevator e = new Elevator();
             for (int i = -2; i <= 0; i++)
             {
                 int requestFloor = i;
-                Assert.Throws<Exception>(() => e.Move(requestFloor));
+                Assert.Throws<Exception>(() => e.DetermineDirection(requestFloor));
             }
         }
 
         [TestCase(1, 1)]
         [TestCase(1, 4)]
         [TestCase(1, 5)]
-        public void WetherLessEqualMax(int initialFloor, int requestFloor)
+        public void WetherSequenceIsCorrect(int firstFloor, int secondFloor)
         {
-            Elevator e = new Elevator(initialFloor);
-            e.Move(requestFloor);
-            Assert.LessOrEqual(e.Floor, 5);
+            Elevator e = new Elevator();
+            Outside outRequest = new Outside();
+            Inside insideRequest = new Inside();
+            outRequest.PickMeUp(firstFloor, e);
+            Assert.That(e.Floor, Is.EqualTo(firstFloor));
+
+            insideRequest.GoToFloor(secondFloor,e);
+            Assert.That(e.Floor, Is.EqualTo(secondFloor));
+
         }
 
-        private int getRandom(int max)
-        {
-            Random rnd = new Random();
-            return rnd.Next(1, max + 1);
-        }
-
-        private int getRandom(int min, int max)
-        {
-            Random rnd = new Random();
-            return rnd.Next(min, max + 1);
-        }
+        
     }
 }

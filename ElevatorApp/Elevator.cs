@@ -12,15 +12,17 @@ namespace ElevatorApp
         public int Floor { get; set; }
         private int MaxFloor { get; set; }
         private int MinFloor { get; set; }
+        public bool DoorIsOpen { get; set; }
         public string Direction { get; set; }
 
-        public Elevator(int _floor)
+        public Elevator()
         {
             this.MaxFloor = 5;
             this.MinFloor = 1;
+            this.DoorIsOpen = false;
             this.Floor = MinFloor;
             this.Direction = enumDirection.STOP;
-            SetFloor(_floor);
+            SetFloor(Helper.getRandom(5));
         }
 
         private void SetFloor(int desiredFloor)
@@ -41,47 +43,64 @@ namespace ElevatorApp
             }
         }
 
-        public void Move(int desiredFloor)
+        public void DetermineDirection(int desiredFloor)
         {
-            Console.WriteLine("-- Move to floor {0}", desiredFloor.ToString());
 
             this.Direction = this.Floor == desiredFloor ? enumDirection.STOP : (this.Floor < desiredFloor ? enumDirection.UP : enumDirection.DOWN);
-            if (this.Direction == enumDirection.UP)
-            {
-                while (this.Floor < desiredFloor)
-                {
-                    SetFloor(this.Floor + 1);
-                    getStatus();
-                }
-                this.Direction = enumDirection.STOP;
-                getStatus();
+            MoveElevator(desiredFloor);
+        }
 
-            }
-            else if (this.Direction == enumDirection.DOWN)
+        private void MoveElevator(int desiredFloor)
+        {
+
+            switch (Direction)
             {
-                while (this.Floor > desiredFloor)
-                {
-                    SetFloor(this.Floor - 1);
+                case enumDirection.UP:
+                    while (Floor < desiredFloor)
+                    {
+                        SetFloor(Floor + 1);
+                        getStatus();
+                    }
+                    Direction = enumDirection.STOP;
+                    DoorIsOpen = true;
                     getStatus();
-                }
-                this.Direction = enumDirection.STOP;
-                getStatus();
+
+                    break;
+                case enumDirection.DOWN:
+                    while (Floor > desiredFloor)
+                    {
+                        SetFloor(Floor - 1);
+                        getStatus();
+                    }
+                    Direction = enumDirection.STOP;
+                    DoorIsOpen = true;
+                    getStatus();
+                    break;
+                case enumDirection.STOP:
+                    Console.WriteLine("Elevator is already on desired floor");
+                    break;
+                default:
+                    break;
             }
         }
 
         public void getStatus()
         {
-            Console.WriteLine("The elevator is on direction {0}, on the floor {1}", this.Direction, this.Floor);
+            Console.WriteLine("The elevator is on direction {0}, on the floor {1} and the door is {2}", this.Direction, this.Floor, this.DoorIsOpen? "opened" : "closed" );
         }
         //public int floor {get; set;}
     }
 
     public struct enumDirection
     {
-        public const string UP = "up";
-        public const string DOWN = "down";
-        public const string STOP = "stop";
+        public const string UP = "UP";
+        public const string DOWN = "DOWN";
+        public const string STOP = "STOP";
     }
 
+   
+
     
+
+
 }
